@@ -1,0 +1,70 @@
+<div class="container">
+  <div class="row">
+    <div class="twelve columns">
+      <span class="u-pull-right">
+        <a href="/ip.json" class="button"><i class="fa fa-clipboard"></i> Copy I.P.</a>
+        <a href="/ip.json" class="button button-primary">JSON</a>
+      </span>
+      <h1><%= request.remote_ip %></h1>
+      <h5>User Agent</h5>
+      <p><%= request.user_agent %></p>
+      <h5>Referer</h5>
+      <p><%= request.referer || '-' %></p>
+      <h5>X-Forwarded-For</h5>
+      <p><%= request.env['HTTP_X_FORWARDED_FOR'] || '-'%></p>
+      <h5>Javascript</h5>
+      <p>
+        <noscript>Is currently <strong>disabled</strong>.</noscript>
+        <span id="javascript-enabled" style="display:none">Is currently <strong>enabled</strong>.</span>
+      </p>
+      <h5>Location (HTML5 Geolocation API)</h5>
+      <p id="location"></p>
+      <noscript>Javascript is required for Geolocation API</noscript>
+      <h5>Do Not Track</h5>
+      <p><%= request.env['HTTP_DNT'] || '-' %></p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="twelve columns">
+      <span class="u-pull-right">Fork me on <a href="">Github</a></span>
+    </div>
+  </div>
+</div>
+
+
+
+<script>
+  document.getElementById('javascript-enabled').style.display = 'inline';
+  var x = document.getElementById("location");
+  function getLocation() {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(showPosition, showError);
+    } else {
+      alert('bac');
+      x.innerHTML = "Geolocation is not supported by this browser.";
+    }
+  }
+
+  function showError(error) {
+    switch(error.code) {
+      case error.PERMISSION_DENIED:
+        x.innerHTML = "User denied the request for Geolocation."
+        break;
+      case error.POSITION_UNAVAILABLE:
+        x.innerHTML = "Location information is unavailable."
+        break;
+      case error.TIMEOUT:
+        x.innerHTML = "The request to get user location timed out."
+        break;
+      case error.UNKNOWN_ERROR:
+        x.innerHTML = "An unknown error occurred."
+        break;
+    }
+  }
+  function showPosition(position) {
+    x.innerHTML = "Latitude: " + position.coords.latitude + 
+    "<br>Longitude: " + position.coords.longitude; 
+  }
+  getLocation();
+</script>
+
